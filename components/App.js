@@ -20,14 +20,13 @@ const reducer = (state = initialState, action) => {
     case 'SET_PERFORMANCES':
       return {...state, performances: action.payload.performances};
     case 'SET_FAVORITE':
-      const {favorites} = state;
-      // state.favorites.push(action.payload.id);
-      return {...state, favorites: favorites.concat(action.payload.id)};
+      state.favorites.push(action.payload.id);
+      return {...state, favorites};
     case 'CLEAR_FAVORITE':
-      const updatedFavorites = state.favorites.filter(
+      const favorites = state.favorites.filter(
         fave => fave !== action.payload.id,
       );
-      return {...state, favorites: updatedFavorites};
+      return {...state, favorites};
   }
   return state;
 };
