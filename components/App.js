@@ -32,10 +32,24 @@ const reducer = (state = initialState, action) => {
 
 const store = createStore(reducer);
 
-const setPerformances = performances => ({
+export const setPerformances = performances => ({
   type: 'SET_PERFORMANCES',
   payload: {
     performances: performanceData,
+  },
+});
+
+export const setFavorite = id => ({
+  type: 'SET_FAVORITE',
+  payload: {
+    id,
+  },
+});
+
+export const clearFavorite = id => ({
+  type: 'CLEAR_FAVORITE',
+  payload: {
+    id,
   },
 });
 
@@ -68,10 +82,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.4,
-    shadowRadius: 2,
   },
   title: {
     color: '#000',
@@ -79,6 +89,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
+    backgroundColor: 'transparent',
   },
 });
 

@@ -1,16 +1,40 @@
 import React from 'react';
-import {StyleSheet, FlatList, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {setFavorite, clearFavorite} from './App';
 
-const PerformanceList = ({performances}) => {
+const PerformanceList = ({performances, setFavorite, clearFavorite}) => {
   return (
     <FlatList
       style={styles.list}
       data={performances}
       keyExtractor={item => item.headliner}
       renderItem={({item}) => {
+        const starActive = require('../assets/star-active.png');
+        const starInactive = require('../assets/star-inactive.png');
         return (
           <View style={styles.item}>
+            <TouchableOpacity
+              onClick={() => {
+                if (item.favorited) {
+                  clearFavorite(item.id);
+                } else {
+                  setFavorite(item.id);
+                }
+              }}>
+              <Image
+                style={styles.favorite}
+                source={item.favorited ? starActive : starInactive}
+              />
+            </TouchableOpacity>
             <Text style={styles.date}>
               {item.time.toLocaleDateString('en-us', {
                 weekday: 'long',
@@ -38,20 +62,40 @@ const PerformanceList = ({performances}) => {
 
 const mapStateToProps = state => {
   const {performances, favorites} = state;
+  const performancesWithFavorites = performances.map(performance => {
+    return {
+      ...performance,
+      favorited: favorites.includes(performance.id),
+    };
+  });
+
   return {
-    performances,
-    favorites,
+    performances: performancesWithFavorites,
   };
 };
 
-export default connect(mapStateToProps)(PerformanceList);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      setFavorite,
+      clearFavorite,
+    },
+    dispatch,
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PerformanceList);
 
 const styles = StyleSheet.create({
   list: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   item: {
-    height: 128,
+    height: 200,
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
@@ -63,6 +107,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 2,
     borderRadius: 12,
+  },
+  favorite: {
+    height: 32,
+    width: 32,
+    resizeMode: 'stretch',
   },
   date: {
     color: '#922',
