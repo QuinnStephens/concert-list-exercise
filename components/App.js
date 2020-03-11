@@ -15,17 +15,19 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
+  console.log('Action dispatched', state, action);
   switch (action.type) {
     case 'SET_PERFORMANCES':
       return {...state, performances: action.payload.performances};
     case 'SET_FAVORITE':
-      state.favorites.push(action.payload.id);
-      return {...state, favorites};
+      const {favorites} = state;
+      // state.favorites.push(action.payload.id);
+      return {...state, favorites: favorites.concat(action.payload.id)};
     case 'CLEAR_FAVORITE':
-      const favorites = state.favorites.filter(
+      const updatedFavorites = state.favorites.filter(
         fave => fave !== action.payload.id,
       );
-      return {...state, favorites};
+      return {...state, favorites: updatedFavorites};
   }
   return state;
 };
@@ -73,7 +75,7 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#f5dbb5',
+    backgroundColor: '#eff',
   },
   header: {
     paddingTop: 24,
@@ -82,6 +84,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
   },
   title: {
     color: '#000',

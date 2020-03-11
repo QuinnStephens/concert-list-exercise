@@ -23,7 +23,7 @@ const PerformanceList = ({performances, setFavorite, clearFavorite}) => {
         return (
           <View style={styles.item}>
             <TouchableOpacity
-              onClick={() => {
+              onPress={() => {
                 if (item.favorited) {
                   clearFavorite(item.id);
                 } else {
