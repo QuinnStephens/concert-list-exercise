@@ -3,10 +3,11 @@
  */
 
 import React from 'react';
-import {StyleSheet, FlatList, View, Text} from 'react-native';
-import {Provider, connect} from 'react-redux';
+import {StyleSheet, View, Text} from 'react-native';
+import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import performanceData from '../assets/performances';
+import PerformanceView from './PerformanceView';
 
 const initialState = {
   performances: [],
@@ -31,39 +32,14 @@ const reducer = (state = initialState, action) => {
 
 const store = createStore(reducer);
 
-store.dispatch({
+const setPerformances = performances => ({
   type: 'SET_PERFORMANCES',
   payload: {
     performances: performanceData,
   },
 });
 
-const PerformanceList = ({performances}) => {
-  return (
-    <FlatList
-      style={styles.list}
-      data={performances}
-      keyExtractor={item => item.headliner}
-      renderItem={({item}) => {
-        return (
-          <View style={styles.item}>
-            <Text style={styles.headliner}>{item.headliner}</Text>
-          </View>
-        );
-      }}
-    />
-  );
-};
-
-const mapStateToProps = state => {
-  const {performances, favorites} = state;
-  return {
-    performances,
-    favorites,
-  };
-};
-
-const PerformanceListConnected = connect(mapStateToProps)(PerformanceList);
+store.dispatch(setPerformances(performanceData));
 
 const App = () => {
   return (
@@ -73,7 +49,7 @@ const App = () => {
           <Text style={styles.title}>Upcoming Concerts</Text>
         </View>
         <View style={styles.content}>
-          <PerformanceListConnected />
+          <PerformanceView />
         </View>
       </View>
     </Provider>
@@ -83,35 +59,26 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#ffe',
+    backgroundColor: '#f5dbb5',
   },
   header: {
     paddingTop: 24,
-    backgroundColor: '#1ca',
+    backgroundColor: '#f2e2c6',
     height: 128,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12,
-    borderBottomColor: '#222',
-    borderBottomWidth: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
   },
   title: {
-    color: '#fff',
+    color: '#000',
     fontSize: 32,
   },
   content: {
     flexGrow: 1,
-  },
-  list: {
-    height: '100%',
-  },
-  item: {
-    height: 64,
-    borderBottomColor: '#222',
-    borderBottomWidth: 1,
-  },
-  headliner: {
-    color: '#000',
   },
 });
 
